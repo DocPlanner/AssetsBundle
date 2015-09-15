@@ -13,8 +13,9 @@
         "symfony/framework-bundle": "2.*"
     },
     "autoload": {
-        "psr-0": { "Docplanner\\AssetsBundle": "" }
+        "psr-4": {
+            "Docplanner\\AssetsBundle\\": "AssetsBundle/"
+        }
     },
-    "target-dir": "Docplanner/AssetsBundle",
     "minimum-stability": "stable"
 }
