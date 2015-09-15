@@ -1,6 +1,6 @@
 {
-    "name": "docplanner/assets-bundle",
-    "type": "assets, grunt",
+    "name": "znanylekarz/assets-bundle",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
