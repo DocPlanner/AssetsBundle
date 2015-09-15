@@ -16,5 +16,5 @@
         "psr-0": { "Docplanner\\AssetsBundle": "" }
     },
     "target-dir": "Docplanner/AssetsBundle",
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
