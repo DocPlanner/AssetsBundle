@@ -1,0 +1,13 @@
+parameters:
+    docplanner_assets_bundle.twig.assets.class:           Docplanner\AssetsBundle\Twig\AssetsExtension
+    docplanner_assets_bundle.service.assets_loader.class: Docplanner\AssetsBundle\Service\AssetsLoader
+
+services:
+    docplanner_assets_bundle.twig.assets:
+        class:     %docplanner_assets_bundle.twig.assets.class%
+        arguments: [ @docplanner_assets_bundle.service.assets_loader ]
+        tags:
+            - { name: twig.extension }
+
+    docplanner_assets_bundle.service.assets_loader:
+        class:    %docplanner_assets_bundle.service.assets_loader.class%
