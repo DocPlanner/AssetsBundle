@@ -1,6 +1,7 @@
 parameters:
     docplanner_assets_bundle.twig.assets.class:           Docplanner\AssetsBundle\Twig\AssetsExtension
     docplanner_assets_bundle.service.assets_loader.class: Docplanner\AssetsBundle\Service\AssetsLoader
+    docplanner_assets.service.assets_picker.class:        Docplanner\AssetsBundle\Service\AssetsPicker
 
 services:
     docplanner_assets_bundle.twig.assets:
@@ -11,3 +12,7 @@ services:
 
     docplanner_assets_bundle.service.assets_loader:
         class:    %docplanner_assets_bundle.service.assets_loader.class%
+
+    docplanner_assets.service.assets_picker:
+        class: %docplanner_assets.service.assets_picker.class% 
+        arguments: [ @request_stack, %docplanner_assets.config% ]
