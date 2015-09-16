@@ -11,9 +11,9 @@ class AssetsLoader
 	 */
 	public function renderScript($type = 'file')
 	{
-		$files = 'file.js';
+		$files = ['platform/js/rwd-common.js'];
 
-		$mask = $type == 'file' ? '<script>%s</script>' : '<script src="%s?%s"></script>';
+		$mask = $type == 'inline' ? '<script>%s</script>' : '<script src="%s?%s"></script>';
 
 		return $this->render($mask, $files, $type);
 	}
@@ -25,9 +25,9 @@ class AssetsLoader
 	 */
 	public function renderStyle($type = 'file')
 	{
-		$files = 'file.js';
+		$files = ['platform/css/rwd-common.css'];
 
-		$mask = $type == 'file' ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s?%s">';
+		$mask = $type == 'inline' ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s?%s">';
 
 		return $this->render($mask, $files, $type);
 	}
@@ -47,6 +47,11 @@ class AssetsLoader
 		{
 			foreach ($files as $file)
 			{
+				if (!file_exists($file))
+				{
+					throw new \LogicException(sprintf('File %s not found', $file));
+				}
+
 				$ret .= sprintf($mask, $file, crc32(file_get_contents($file)));
 			}
 		}
@@ -54,6 +59,11 @@ class AssetsLoader
 		{
 			foreach ($files as $file)
 			{
+				if (!file_exists($file))
+				{
+					throw new \LogicException(sprintf('File %s not found', $file));
+				}
+
 				$source = file_get_contents($file);
 				$ret .= $source;
 			}

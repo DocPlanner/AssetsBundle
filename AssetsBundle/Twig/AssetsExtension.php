@@ -23,8 +23,8 @@ class AssetsExtension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return [
-			new \Twig_SimpleFunction('assets_script', [$this, 'assetsScript']),
-			new \Twig_SimpleFunction('assets_style',  [$this, 'assetsStyle']),
+			new \Twig_SimpleFunction('assets_script', [$this, 'assetsScript'], ['is_safe' => ['html']]),
+			new \Twig_SimpleFunction('assets_style',  [$this, 'assetsStyle'], ['is_safe' => ['html']]),
 		];
 	}
 
@@ -33,10 +33,9 @@ class AssetsExtension extends \Twig_Extension
 	 *
 	 * @return string
 	 */
-	protected function assetsScript($type = null)
+	public function assetsScript($type = 'file')
 	{
-		return '';
-//		return $this->assetsLoader->renderScript($type);
+		return $this->assetsLoader->renderScript($type);
 	}
 
 	/**
@@ -44,9 +43,9 @@ class AssetsExtension extends \Twig_Extension
 	 *
 	 * @return string
 	 */
-	protected function assetsStyle($type = null)
+	public function assetsStyle($type = 'file')
 	{
-		return $this->assetsLoader->renderScript($type);
+		return $this->assetsLoader->renderStyle($type);
 	}
 
 	/**
