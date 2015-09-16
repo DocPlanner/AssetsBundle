@@ -33,7 +33,7 @@ class AssetsExtension extends \Twig_Extension
 	 *
 	 * @return string
 	 */
-	public function assetsScript($type = 'file')
+	public function assetsScript($type = 'src')
 	{
 		return $this->assetsLoader->renderScript($type);
 	}
@@ -43,7 +43,7 @@ class AssetsExtension extends \Twig_Extension
 	 *
 	 * @return string
 	 */
-	public function assetsStyle($type = 'file')
+	public function assetsStyle($type = 'src')
 	{
 		return $this->assetsLoader->renderStyle($type);
 	}

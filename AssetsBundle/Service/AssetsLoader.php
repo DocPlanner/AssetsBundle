@@ -2,20 +2,20 @@
 
 namespace Docplanner\AssetsBundle\Service;
 
+use Docplanner\AssetsBundle\IO\Asset;
+
 class AssetsLoader
 {
+
+	/** @var AssetsPicker $assetsPicker */
+	private $asstsPicker;
+
 	/**
-	 * @param null $type
-	 *
-	 * @return string
+	 * @param AssetsPicker $assetsPicker
 	 */
-	public function renderScript($type = 'file')
+	public function __construct(AssetsPicker $assetsPicker)
 	{
-		$files = ['platform/js/rwd-common.js'];
-
-		$mask = $type == 'inline' ? '<script>%s</script>' : '<script src="%s?%s"></script>';
-
-		return $this->render($mask, $files, $type);
+		$this->asstsPicker = $assetsPicker;
 	}
 
 	/**
@@ -23,52 +23,72 @@ class AssetsLoader
 	 *
 	 * @return string
 	 */
-	public function renderStyle($type = 'file')
+	public function renderScript($type = 'src')
 	{
-		$files = ['platform/css/rwd-common.css'];
+		$assets = $this->asstsPicker->pickScriptAssets();
+		$mask  = $type == 'inline' ? '<script>%s</script>' : '<script src="%s?%s"></script>';
 
-		$mask = $type == 'inline' ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s?%s">';
-
-		return $this->render($mask, $files, $type);
+		return $this->render($mask, $assets, $type);
 	}
 
 	/**
-	 * @param $mask
-	 * @param $files
-	 * @param $type
+	 * @param null $type
 	 *
 	 * @return string
 	 */
-	private function render($mask, $files, $type)
+	public function renderStyle($type = 'src')
+	{
+		$assets = $this->asstsPicker->pickStyleAssets();
+		$mask  = $type == 'inline' ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s?%s">';
+
+		return $this->render($mask, $assets, $type);
+	}
+
+	/**
+	 * @param         $mask
+	 * @param Asset[] $assets
+	 * @param         $type
+	 *
+	 * @return string
+	 */
+	private function render($mask, $assets, $type)
 	{
 		$ret = '';
 
-		if ($type == 'file')
+		if ($type == 'src')
 		{
-			foreach ($files as $file)
+			foreach ($assets as $asset)
 			{
-				if (!file_exists($file))
+				if (!file_exists($asset->getSrc()))
 				{
-					throw new \LogicException(sprintf('File %s not found', $file));
+					throw new \LogicException(sprintf('File %s not found', $asset->getSrc()));
 				}
 
-				$ret .= sprintf($mask, $file, crc32(file_get_contents($file)));
+				if ($asset->getSrc())
+				{
+					$ret .= sprintf($mask, $asset->getSrc(), crc32(file_get_contents($asset->getSrc())));
+				}
 			}
 		}
 		else
 		{
-			foreach ($files as $file)
+			foreach ($assets as $asset)
 			{
-				if (!file_exists($file))
+				if (!file_exists($asset->getInline()))
 				{
-					throw new \LogicException(sprintf('File %s not found', $file));
+					throw new \LogicException(sprintf('File %s not found', $asset->getInline()));
 				}
 
-				$source = file_get_contents($file);
-				$ret .= $source;
+				if ($asset->getInline())
+				{
+					$ret .= file_get_contents($asset->getInline());
+				}
 			}
 
-			$ret = sprintf($mask, $ret);
+			if ($ret)
+			{
+				$ret = sprintf($mask, $ret);
+			}
 		}
 
 		return $ret;
