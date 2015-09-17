@@ -20,8 +20,9 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('docplanner_assets');
 
         $nodeBuilder = $rootNode->children();
-        $this->addNode($nodeBuilder, 'style');
-        $this->addNode($nodeBuilder, 'script');
+        $this->addBaseNode($nodeBuilder)
+            ->addNode($nodeBuilder, 'style')
+            ->addNode($nodeBuilder, 'script');
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
@@ -34,7 +35,7 @@ class Configuration implements ConfigurationInterface
      * @param NodeBuilder $node
      * @param string      $name
      *
-     * @return NodeBuilder
+     * @return $this
      */
     public function addNode(NodeBuilder $node, $name)
     {
@@ -78,6 +79,30 @@ class Configuration implements ConfigurationInterface
             ->end();
             // @formatter:on
 
-        return $node;
+        return $this;
+    }
+
+    /**
+     * @param NodeBuilder $nodeBuilder
+     *
+     * @return $this
+     */
+    private function addBaseNode(NodeBuilder $nodeBuilder)
+    {
+        // @formatter:off
+        /** @noinspection PhpUndefinedMethodInspection */
+        $nodeBuilder->arrayNode('base')
+                        ->isRequired()
+                        ->children()
+                            ->scalarNode('host')
+                                ->isRequired()
+                            ->end()
+                            ->scalarNode('path')
+                                ->isRequired()
+                            ->end()
+                            ->end();
+        // @formatter:on
+
+        return $this;
     }
 }
