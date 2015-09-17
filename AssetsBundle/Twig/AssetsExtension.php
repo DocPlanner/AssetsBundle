@@ -33,9 +33,9 @@ class AssetsExtension extends \Twig_Extension
 	 *
 	 * @return string
 	 */
-	public function assetsScript($type = 'src')
+	public function assetsScript($type = null)
 	{
-		return $this->assetsLoader->renderScript($type);
+		return $this->assetsLoader->renderScript($type == 'inline' ? true : false);
 	}
 
 	/**
@@ -43,9 +43,9 @@ class AssetsExtension extends \Twig_Extension
 	 *
 	 * @return string
 	 */
-	public function assetsStyle($type = 'src')
+	public function assetsStyle($type = null)
 	{
-		return $this->assetsLoader->renderStyle($type);
+		return $this->assetsLoader->renderStyle($type == 'inline' ? true : false);
 	}
 
 	/**

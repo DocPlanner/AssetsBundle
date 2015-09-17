@@ -19,51 +19,46 @@ class AssetsLoader
 	}
 
 	/**
-	 * @param null $type
+	 * @param bool|false $isInline
 	 *
 	 * @return string
 	 */
-	public function renderScript($type = 'src')
+	public function renderScript($isInline = false)
 	{
 		$assets = $this->asstsPicker->pickScriptAssets();
-		$mask  = $type == 'inline' ? '<script>%s</script>' : '<script src="%s?%s"></script>';
+		$mask   = $type == 'inline' ? '<script>%s</script>' : '<script src="%s?%s"></script>';
 
-		return $this->render($mask, $assets, $type);
+		return $this->render($mask, $assets, $isInline);
 	}
 
 	/**
-	 * @param null $type
+	 * @param bool|false $isInline
 	 *
 	 * @return string
 	 */
-	public function renderStyle($type = 'src')
+	public function renderStyle($isInline = false)
 	{
 		$assets = $this->asstsPicker->pickStyleAssets();
-		$mask  = $type == 'inline' ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s?%s">';
+		$mask   = $type == 'inline' ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s?%s">';
 
-		return $this->render($mask, $assets, $type);
+		return $this->render($mask, $assets, $isInline);
 	}
 
 	/**
-	 * @param         $mask
+	 * @param String  $mask
 	 * @param Asset[] $assets
-	 * @param         $type
+	 * @param boolean $isInline
 	 *
 	 * @return string
 	 */
-	private function render($mask, $assets, $type)
+	private function render($mask, $assets, $isInline)
 	{
 		$ret = '';
 
-		if ($type == 'src')
+		if (!$isInline)
 		{
 			foreach ($assets as $asset)
 			{
-				if (!file_exists($asset->getSrc()))
-				{
-					throw new \LogicException(sprintf('File %s not found', $asset->getSrc()));
-				}
-
 				if ($asset->getSrc())
 				{
 					$ret .= sprintf($mask, $asset->getSrc(), crc32(file_get_contents($asset->getSrc())));
@@ -74,11 +69,6 @@ class AssetsLoader
 		{
 			foreach ($assets as $asset)
 			{
-				if (!file_exists($asset->getInline()))
-				{
-					throw new \LogicException(sprintf('File %s not found', $asset->getInline()));
-				}
-
 				if ($asset->getInline())
 				{
 					$ret .= file_get_contents($asset->getInline());
@@ -94,6 +84,3 @@ class AssetsLoader
 		return $ret;
 	}
 }
-
-
-
