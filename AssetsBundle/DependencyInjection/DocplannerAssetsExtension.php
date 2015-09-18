@@ -21,9 +21,24 @@ class DocplannerAssetsExtension extends Extension
 		$configuration = new Configuration();
 		$config        = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('docplanner_assets.config', $config);
+		foreach (['style', 'script'] as $type)
+		{
+			foreach ($config[$type]['assets'] as $assetName => &$asset)
+			{
+				$src = trim($asset['src']);
+				$isNetworkResource = false;
+				if (0 === strpos($src, '//') || false !== filter_var($src, FILTER_VALIDATE_URL))
+				{
+					$isNetworkResource = true;
+				}
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+				$asset['remote'] = $isNetworkResource;
+			}
+		}
+
+		$container->setParameter('docplanner_assets.config', $config);
+
+		$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
 }

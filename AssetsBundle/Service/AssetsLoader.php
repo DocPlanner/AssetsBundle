@@ -26,7 +26,7 @@ class AssetsLoader
 	public function renderScript($isInline = false)
 	{
 		$assets = $this->asstsPicker->pickScriptAssets();
-		$mask   = $type == 'inline' ? '<script>%s</script>' : '<script src="%s?%s"></script>';
+		$mask   = $isInline ? '<script>%s</script>' : '<script src="%s"></script>';
 
 		return $this->render($mask, $assets, $isInline);
 	}
@@ -39,7 +39,7 @@ class AssetsLoader
 	public function renderStyle($isInline = false)
 	{
 		$assets = $this->asstsPicker->pickStyleAssets();
-		$mask   = $type == 'inline' ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s?%s">';
+		$mask   = $isInline ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s">';
 
 		return $this->render($mask, $assets, $isInline);
 	}
@@ -59,19 +59,16 @@ class AssetsLoader
 		{
 			foreach ($assets as $asset)
 			{
-				if ($asset->getSrc())
-				{
-					$ret .= sprintf($mask, $asset->getSrc(), crc32(file_get_contents($asset->getSrc())));
-				}
+				$ret .= sprintf($mask, $asset->getUrl());
 			}
 		}
 		else
 		{
 			foreach ($assets as $asset)
 			{
-				if ($asset->getInline())
+				if ($asset->isInline())
 				{
-					$ret .= file_get_contents($asset->getInline());
+					$ret .= file_get_contents($asset->getPath() ?: $asset->getUrl());
 				}
 			}
 

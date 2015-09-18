@@ -17,3 +17,13 @@ services:
     docplanner_assets.service.assets_picker:
         class: %docplanner_assets.service.assets_picker.class% 
         arguments: [ @request_stack, %docplanner_assets.config% ]
+
+    docplanner_assets.service.assets_repository:
+        class: Docplanner\AssetsBundle\Service\AssetsRepository
+        arguments: [ %docplanner_assets.config%, %kernel.cache_dir% ]
+
+    docplanner_assets.service.revision_warmer:
+        class: Docplanner\AssetsBundle\Service\RevisionWarmer
+        arguments: [ @docplanner_assets.service.assets_repository, %docplanner_assets.config% ]
+        tags:
+            - { name: kernel.cache_warmer }
