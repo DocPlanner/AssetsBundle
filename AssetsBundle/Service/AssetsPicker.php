@@ -22,8 +22,8 @@ class AssetsPicker
 	private $config;
 
 	/**
-	 * @param RequestStack $requestStack
-	 * @param array        $config
+	 * @param RequestStack     $requestStack
+	 * @param array            $config
 	 */
 	public function __construct(RequestStack $requestStack, array $config)
 	{
@@ -32,33 +32,22 @@ class AssetsPicker
 	}
 
 	/**
-	 * @return Asset[]
-	 */
-	public function pickStyleAssets()
-	{
-		return $this->getAssets('style');
-	}
-
-	/**
-	 * @return Asset[]
-	 */
-	public function pickScriptAssets()
-	{
-		return $this->getAssets('script');
-	}
-
-	/**
 	 * @param string $type
 	 *
 	 * @return string[] - asset names
 	 */
-	private function pickAssets($type)
+	public function pickAssets($type)
 	{
+		if (false === array_key_exists($type, $this->config['types']))
+		{
+			throw new \LogicException(sprintf('Type "%s" is not defined!', $type));
+		}
+
 		$route = $this->requestStack->getMasterRequest()->get('_route');
 
 		$defaults = [];
 		$picked = [];
-		foreach ($this->config[$type]['groups'] as $groupName => $group)
+		foreach ($this->config['types'][$type]['groups'] as $groupName => $group)
 		{
 			if (is_array($group['routes']) && in_array($route, $group['routes']))
 			{
@@ -81,28 +70,5 @@ class AssetsPicker
 		array_unique($picked);
 
 		return $picked;
-	}
-
-	/**
-	 * @param string $type
-	 *
-	 * @return Asset[]
-	 */
-	private function getAssets($type)
-	{
-		$assets = [];
-		foreach ($this->pickAssets($type) as $asset)
-		{
-			if (false === array_key_exists($asset, $this->config[$type]['assets']))
-			{
-				throw new \RuntimeException(sprintf('Asset "%s" not found', $asset));
-			}
-
-			$assetConfig = $this->config[$type]['assets'][$asset];
-
-			$assets[] = new Asset($assetConfig['src'], $assetConfig['inline']);
-		}
-
-		return $assets;
 	}
 }

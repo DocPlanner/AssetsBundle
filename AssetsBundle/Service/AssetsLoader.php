@@ -2,82 +2,38 @@
 
 namespace Docplanner\AssetsBundle\Service;
 
-use Docplanner\AssetsBundle\IO\Asset;
-
 class AssetsLoader
 {
-
-	/** @var AssetsPicker $assetsPicker */
-	private $asstsPicker;
+	/** @var AssetsProvider */
+	private $assetsProvider;
 
 	/**
-	 * @param AssetsPicker $assetsPicker
+	 * @param AssetsProvider $assetsProvider
 	 */
-	public function __construct(AssetsPicker $assetsPicker)
+	public function __construct(AssetsProvider $assetsProvider)
 	{
-		$this->asstsPicker = $assetsPicker;
+		$this->assetsProvider = $assetsProvider;
 	}
 
 	/**
-	 * @param bool|false $isInline
+	 * @param string $type
+	 * @param bool   $inline
 	 *
-	 * @return string
+	 * @return string[]
 	 */
-	public function renderScript($isInline = false)
+	public function assets($type, $inline = false)
 	{
-		$assets = $this->asstsPicker->pickScriptAssets();
-		$mask   = $isInline ? '<script>%s</script>' : '<script src="%s"></script>';
-
-		return $this->render($mask, $assets, $isInline);
-	}
-
-	/**
-	 * @param bool|false $isInline
-	 *
-	 * @return string
-	 */
-	public function renderStyle($isInline = false)
-	{
-		$assets = $this->asstsPicker->pickStyleAssets();
-		$mask   = $isInline ? '<style>%s</style>' : '<link rel="stylesheet" type="text/css" href="%s">';
-
-		return $this->render($mask, $assets, $isInline);
-	}
-
-	/**
-	 * @param String  $mask
-	 * @param Asset[] $assets
-	 * @param boolean $isInline
-	 *
-	 * @return string
-	 */
-	private function render($mask, $assets, $isInline)
-	{
-		$ret = '';
-
-		if (!$isInline)
+		$result = [];
+		foreach ($this->assetsProvider->getAssets($type) as $assetName => $asset)
 		{
-			foreach ($assets as $asset)
+			if ($inline !== $asset->isInline())
 			{
-				$ret .= sprintf($mask, $asset->getUrl());
-			}
-		}
-		else
-		{
-			foreach ($assets as $asset)
-			{
-				if ($asset->isInline())
-				{
-					$ret .= file_get_contents($asset->getPath() ?: $asset->getUrl());
-				}
+				continue;
 			}
 
-			if ($ret)
-			{
-				$ret = sprintf($mask, $ret);
-			}
+			$result[$assetName] = $inline ? file_get_contents($asset->getPath()) : $asset->getUrl();
 		}
 
-		return $ret;
+		return $result;
 	}
 }

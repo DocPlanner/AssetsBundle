@@ -21,18 +21,34 @@ class DocplannerAssetsExtension extends Extension
 		$configuration = new Configuration();
 		$config        = $this->processConfiguration($configuration, $configs);
 
-		foreach (['style', 'script'] as $type)
+		foreach ($config['types'] as &$typeConfig)
 		{
-			foreach ($config[$type]['assets'] as $assetName => &$asset)
+			foreach ($typeConfig['assets'] as $assetName => &$asset)
 			{
 				$src = trim($asset['src']);
-				$isNetworkResource = false;
 				if (0 === strpos($src, '//') || false !== filter_var($src, FILTER_VALIDATE_URL))
 				{
-					$isNetworkResource = true;
+					$url = $asset['src'];
+					$path = null;
+				}
+				else
+				{
+					$url = $config['base_host'] . $asset['src'];
+					$path = $config['base_path'] . $asset['src'];
+
+					if (false === file_exists($path))
+					{
+						throw new \RuntimeException(sprintf('File "%s" not found(asset "%s")!', $path, $assetName));
+					}
+
+					if ($config['use_revisions'])
+					{
+						$url .= '?' . crc32(file_get_contents($path));
+					}
 				}
 
-				$asset['remote'] = $isNetworkResource;
+				$asset['url'] = $url;
+				$asset['path'] = $path;
 			}
 		}
 

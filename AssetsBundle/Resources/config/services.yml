@@ -2,6 +2,8 @@ parameters:
     docplanner_assets_bundle.twig.assets.class:           Docplanner\AssetsBundle\Twig\AssetsExtension
     docplanner_assets_bundle.service.assets_loader.class: Docplanner\AssetsBundle\Service\AssetsLoader
     docplanner_assets.service.assets_picker.class:        Docplanner\AssetsBundle\Service\AssetsPicker
+    docplanner_assets.service.assets_repository.class:    Docplanner\AssetsBundle\Service\AssetsRepository
+    docplanner_assets.service.assets_provider.class:      Docplanner\AssetsBundle\Service\AssetsProvider
 
 services:
     docplanner_assets_bundle.twig.assets:
@@ -12,18 +14,16 @@ services:
 
     docplanner_assets_bundle.service.assets_loader:
         class: %docplanner_assets_bundle.service.assets_loader.class%
-        arguments: [ @docplanner_assets.service.assets_picker ]
+        arguments: [ @docplanner_assets.service.assets_provider ]
 
     docplanner_assets.service.assets_picker:
         class: %docplanner_assets.service.assets_picker.class% 
         arguments: [ @request_stack, %docplanner_assets.config% ]
 
     docplanner_assets.service.assets_repository:
-        class: Docplanner\AssetsBundle\Service\AssetsRepository
-        arguments: [ %docplanner_assets.config%, %kernel.cache_dir% ]
+        class: %docplanner_assets.service.assets_repository.class%
+        arguments: [ %docplanner_assets.config% ]
 
-    docplanner_assets.service.revision_warmer:
-        class: Docplanner\AssetsBundle\Service\RevisionWarmer
-        arguments: [ @docplanner_assets.service.assets_repository, %docplanner_assets.config% ]
-        tags:
-            - { name: kernel.cache_warmer }
+    docplanner_assets.service.assets_provider:
+        class: %docplanner_assets.service.assets_provider.class%
+        arguments: [ @docplanner_assets.service.assets_repository, @docplanner_assets.service.assets_picker ]

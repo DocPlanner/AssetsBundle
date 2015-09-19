@@ -16,32 +16,26 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('docplanner_assets');
+        $treeBuilder = new TreeBuilder;
+        $nodeBuilder = $treeBuilder->root('docplanner_assets')->children();
 
-        $nodeBuilder = $rootNode->children();
-        $this->addBaseNode($nodeBuilder)
-            ->addNode($nodeBuilder, 'style')
-            ->addNode($nodeBuilder, 'script');
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $this->addOptions($nodeBuilder)
+              ->addTypes($nodeBuilder);
 
         return $treeBuilder;
     }
 
     /**
      * @param NodeBuilder $node
-     * @param string      $name
      *
      * @return $this
      */
-    public function addNode(NodeBuilder $node, $name)
+    public function addTypes(NodeBuilder $node)
     {
         // @formatter:off
         /** @noinspection PhpUndefinedMethodInspection */
-        $node->arrayNode($name)
+        $node->arrayNode('types')
+                ->prototype('array')
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->arrayNode('assets')
@@ -76,8 +70,9 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end();
-            // @formatter:on
+            ->end()
+        ->end();
+        // @formatter:on
 
         return $this;
     }
@@ -87,20 +82,19 @@ class Configuration implements ConfigurationInterface
      *
      * @return $this
      */
-    private function addBaseNode(NodeBuilder $nodeBuilder)
+    private function addOptions(NodeBuilder $nodeBuilder)
     {
         // @formatter:off
         /** @noinspection PhpUndefinedMethodInspection */
-        $nodeBuilder->arrayNode('base')
+        $nodeBuilder->scalarNode('use_revisions')
+                        ->defaultTrue()
+                    ->end()
+                    ->scalarNode('base_host')
                         ->isRequired()
-                        ->children()
-                            ->scalarNode('host')
-                                ->isRequired()
-                            ->end()
-                            ->scalarNode('path')
-                                ->isRequired()
-                            ->end()
-                            ->end();
+                    ->end()
+                    ->scalarNode('base_path')
+                        ->isRequired()
+                    ->end();
         // @formatter:on
 
         return $this;

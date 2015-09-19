@@ -6,12 +6,16 @@
         {
             "name": "Marcin Chylek",
             "email": "marcin@chylek.pl"
+        },
+        {
+            "name": "Łukasz Barulski",
+            "email": "tracerout@yahoo.com"
         }
     ],
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "2.*",
-        "twig/twig": "~1.20|~2.0"
+        "twig/twig": "1.*"
     },
     "autoload": {
         "psr-4": {

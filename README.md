@@ -5,39 +5,30 @@
 ### Sample config
 ```
 docplanner_assets:
-    base:
-        host: "assets.example.com"
-        path: "/"
-    style:
-        assets:
-            common: { src: "/to/some/file.css" }
-            fries:  { src: "/to/some/other/file.css", inline: true }
-        groups:
-            default:
-                assets:
-                    - common
-                    - fries
-                default: true
-            homepage:
-                assets:
-                    - common
-                    - fries
-                    - homepage
-                routes: [ "homepage", "homepage_with_fireworks" ]
-    script:
-        assets:
-            common: { src: "/to/some/file.js" }
-            fries:  { src: "/to/some/other/file.js", inline: true }
-        groups:
-            default:
-                assets:
-                    - common
-                    - fries
-                default: true
-            homepage:
-                assets:
-                    - common
-                    - fries
-                    - homepage
-                routes: [ "homepage", "homepage_with_fireworks" ]
+    use_revisions: true
+    base_host: "www.example.com/platform/"
+    base_path: "%kernel.root_dir%/../web/platform/"
+    types:
+        style:
+            assets:
+                common: { src: "css/rwd-common.css" }
+                extra: { src: "css/rwd-extra.css" }
+            groups:
+                default:
+                    assets:
+                        - common
+                        - extra
+                    default: true
+                homepage:
+                    assets:
+                        - common
+                    routes: [ "homepage" ]
+        script:
+            assets:
+                common: { src: "js/common.js" }
+            groups:
+                default:
+                    assets:
+                        - common
+                    default: true
 ```

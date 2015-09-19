@@ -10,57 +10,18 @@ use Docplanner\AssetsBundle\IO\Asset;
 
 class AssetsRepository
 {
-	/** @var Asset[]|null */
-	private $script;
-
-	/** @var Asset[]|null */
-	private $style;
+	/** @var Asset[][]|null */
+	private $data = [];
 
 	/** @var array */
 	private $config;
 
-	/** @var array|null */
-	private $cache;
-
 	/**
-	 * @param array  $config
-	 * @param string $cacheDir
+	 * @param array $config
 	 */
-	public function __construct(array $config, $cacheDir)
+	public function __construct(array $config)
 	{
 		$this->config = $config;
-
-		$cacheFileName = $cacheDir . '/' . RevisionWarmer::CACHE_FILE_NAME;
-		if (file_exists($cacheFileName))
-		{
-			$this->cache = require $cacheFileName;
-		}
-	}
-
-	/**
-	 * @return \Docplanner\AssetsBundle\IO\Asset[]
-	 */
-	public function getScripts()
-	{
-		if (null === $this->script)
-		{
-			$this->script = $this->getAssets('script');
-		}
-
-		return $this->script;
-	}
-
-	/**
-	 * @return \Docplanner\AssetsBundle\IO\Asset[]
-	 */
-	public function getStyles()
-	{
-		if (null === $this->style)
-		{
-			$this->style = $this->getAssets('style');
-		}
-
-		return $this->style;
 	}
 
 	/**
@@ -68,30 +29,42 @@ class AssetsRepository
 	 *
 	 * @return Asset[]
 	 */
-	private function getAssets($type)
+	public function getAssetsList($type)
 	{
-		$data = [];
-		foreach ($this->config[$type]['assets'] as $assetName => $asset)
+		if (array_key_exists($type, $this->data))
 		{
-			if ($asset['remote'])
-			{
-				$url = $asset['src'];
-				$path = null;
-			}
-			else
-			{
-
-				$url = $this->config['base']['host'] . $asset['src'];
-				$path = $this->config['base']['path'] . $asset['src'];
-				if ([] !== $this->cache && array_key_exists($type, $this->cache) && array_key_exists($assetName, $this->cache[$type]))
-				{
-					$url .= '?' . $this->cache[$type][$assetName];
-				}
-			}
-
-			$data[$assetName] = new Asset($url, $path, $asset['inline']);
+			return $this->data[$type];
 		}
 
-		return $data;
+		if (false === array_key_exists($type, $this->config['types']))
+		{
+			throw new \LogicException(sprintf('Type "%s" is not defined!', $type));
+		}
+
+		$this->data[$type] = [];
+		foreach ($this->config['types'][$type]['assets'] as $assetName => $asset)
+		{
+			$this->data[$type][$assetName] = new Asset($asset['url'], $asset['path'], $asset['inline']);
+		}
+
+		return $this->data[$type];
+	}
+
+	/**
+	 * @param string $type
+	 * @param string $assetName
+	 *
+	 * @return Asset
+	 */
+	public function getAsset($type, $assetName)
+	{
+		$assets = $this->getAssetsList($type);
+
+		if (false === array_key_exists($assetName, $assets))
+		{
+			throw new \LogicException(sprintf('Asset "%s" not defined in type "%s"!', $assetName, $type));
+		}
+
+		return $assets[$assetName];
 	}
 }
