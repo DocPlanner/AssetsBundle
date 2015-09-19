@@ -32,3 +32,14 @@ docplanner_assets:
                         - common
                     default: true
 ```
+
+
+### Sample use in twig
+```
+{% for style in assets_style() %}<link href="{{ style }}" rel="stylesheet" />{% endfor %}
+<style type="text/css">{% for style in assets_style(true) %}{{ style }}{% endfor %}</style>
+
+{% for script in assets_script() %}<script src="{{ script }}" type="text/javascript"></script>{% endfor %}
+<script type="text/javascript">{% for script in assets_script(true) %}{{ script }}{% endfor %}</script>
+
+```
