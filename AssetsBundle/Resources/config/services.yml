@@ -8,17 +8,17 @@ parameters:
 services:
     docplanner_assets_bundle.twig.assets:
         class: %docplanner_assets_bundle.twig.assets.class%
-        arguments: [ @docplanner_assets_bundle.service.assets_loader ]
+        arguments: [ "@docplanner_assets_bundle.service.assets_loader" ]
         tags:
             - { name: twig.extension }
 
     docplanner_assets_bundle.service.assets_loader:
         class: %docplanner_assets_bundle.service.assets_loader.class%
-        arguments: [ @docplanner_assets.service.assets_provider ]
+        arguments: [ "@docplanner_assets.service.assets_provider" ]
 
     docplanner_assets.service.assets_picker:
         class: %docplanner_assets.service.assets_picker.class% 
-        arguments: [ @request_stack, %docplanner_assets.config% ]
+        arguments: [ "@request_stack", %docplanner_assets.config% ]
 
     docplanner_assets.service.assets_repository:
         class: %docplanner_assets.service.assets_repository.class%
@@ -26,4 +26,4 @@ services:
 
     docplanner_assets.service.assets_provider:
         class: %docplanner_assets.service.assets_provider.class%
-        arguments: [ @docplanner_assets.service.assets_repository, @docplanner_assets.service.assets_picker ]
+        arguments: [ "@docplanner_assets.service.assets_repository", "@docplanner_assets.service.assets_picker" ]
