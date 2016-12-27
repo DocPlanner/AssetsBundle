@@ -43,7 +43,7 @@ class DocplannerAssetsExtension extends Extension
 
 					if ($config['use_revisions'])
 					{
-						$url .= '?' . crc32(file_get_contents($path));
+						$url .= '?v=' . crc32(file_get_contents($path));
 					}
 				}
 
