@@ -35,7 +35,7 @@ class Configuration implements ConfigurationInterface
         // @formatter:off
         /** @noinspection PhpUndefinedMethodInspection */
         $node->arrayNode('types')
-                ->useAttributeAsKey('assets_type')
+                ->useAttributeAsKey('type')
                 ->prototype('array')
                 ->addDefaultsIfNotSet()
                 ->children()
