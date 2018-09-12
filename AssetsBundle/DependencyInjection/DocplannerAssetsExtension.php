@@ -50,6 +50,34 @@ class DocplannerAssetsExtension extends Extension
 				$asset['url'] = $url;
 				$asset['path'] = $path;
 			}
+
+			$manifest = [];
+
+			if(!empty($config['manifest_file']))
+			{
+				$manifestFile=$config['manifest_file'];
+
+				if(is_file($manifestFile) && is_readable($manifestFile))
+				{
+					$manifest = file_get_contents($manifestFile);
+					$manifest = @json_decode($manifest, true) ?? [];
+				}
+			}
+
+			foreach($typeConfig['manifest_assets'] ?? [] as $manifestKey)
+			{
+				if(!empty($manifest[$manifestKey]))
+				{
+					$manifestAsset = $manifest[$manifestKey];
+
+					$typeConfig['assets'][$manifestKey] = [
+						'src' => $manifestAsset,
+						'url' => $config['base_host'].$manifestAsset,
+						'path' => $config['base_path'].$manifestAsset,
+						'inline' => false,
+					];
+				}
+			}
 		}
 
 		$container->setParameter('docplanner_assets.config', $config);
