@@ -62,6 +62,10 @@ class DocplannerAssetsExtension extends Extension
 					$manifest = file_get_contents($manifestFile);
 					$manifest = @json_decode($manifest, true) ?? [];
 				}
+				else
+                {
+                    throw new \RuntimeException(sprintf('Manifest file `%s` not found', $manifestFile));
+                }
 			}
 
 			foreach($typeConfig['manifest_assets'] ?? [] as $manifestKey)
