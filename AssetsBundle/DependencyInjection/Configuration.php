@@ -39,6 +39,10 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                 ->addDefaultsIfNotSet()
                 ->children()
+                    ->arrayNode('manifest_assets')
+						->prototype('scalar')
+						->end()
+                    ->end()
                     ->arrayNode('assets')
                     ->defaultValue([])
                     ->prototype('array')
@@ -95,7 +99,9 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('base_path')
                         ->isRequired()
-                    ->end();
+                    ->end()
+        			->scalarNode('manifest_file')
+					->end();
         // @formatter:on
 
         return $this;
