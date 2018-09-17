@@ -25,7 +25,11 @@ class AssetsController extends Controller
 			$scripts[] = sprintf('<script defer="defer" src="%s"></script>', $script);
 		}
 
-		return new Response(implode("\n", $scripts));
+		$rsp = new Response(implode("\n", $scripts));
+		$rsp->setPublic();
+		$rsp->setTtl(0);
+
+		return $rsp;
 	}
 
 }
