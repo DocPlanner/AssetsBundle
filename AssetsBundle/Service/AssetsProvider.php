@@ -28,12 +28,13 @@ class AssetsProvider
 
 	/**
 	 * @param string $type
+	 * @param $forceRoute
 	 *
 	 * @return Asset[]
 	 */
-	public function getAssets($type)
+	public function getAssets($type, $forceRoute = null)
 	{
-		$chosenAssets = $this->assetsPicker->pickAssets($type);
+		$chosenAssets = $this->assetsPicker->pickAssets($type, $forceRoute);
 		if ([] === $chosenAssets)
 		{
 			return [];

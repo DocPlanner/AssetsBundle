@@ -17,17 +17,16 @@ class AssetsLoader
 
 	/**
 	 * @param string $type
-	 * @param bool   $inline
+	 * @param bool $inline
+	 * @param null $forceRoute
 	 *
 	 * @return string[]
 	 */
-	public function assets($type, $inline = false)
+	public function assets($type, $inline = false, $forceRoute = null)
 	{
 		$result = [];
-		foreach ($this->assetsProvider->getAssets($type) as $assetName => $asset)
-		{
-			if ($inline !== $asset->isInline())
-			{
+		foreach ($this->assetsProvider->getAssets($type, $forceRoute) as $assetName => $asset) {
+			if ($inline !== $asset->isInline()) {
 				continue;
 			}
 
