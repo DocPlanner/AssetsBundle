@@ -26,8 +26,8 @@ class AssetsController extends Controller
 		}
 
 		$rsp = new Response(implode("\n", $scripts));
-		$rsp->setPublic();
-		$rsp->setTtl(0);
+		$rsp->setPrivate();
+		$rsp->setTtl(5);
 
 		return $rsp;
 	}
