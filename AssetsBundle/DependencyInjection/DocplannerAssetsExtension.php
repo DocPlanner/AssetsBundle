@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class DocplannerAssetsExtension extends Extension
 {
+	protected static $parsedManifests = [];
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -53,19 +55,9 @@ class DocplannerAssetsExtension extends Extension
 
 			$manifest = [];
 
-			if(!empty($config['manifest_file']))
+			if(!empty($typeConfig['manifest_file']))
 			{
-				$manifestFile=$config['manifest_file'];
-
-				if(is_file($manifestFile) && is_readable($manifestFile))
-				{
-					$manifest = file_get_contents($manifestFile);
-					$manifest = @json_decode($manifest, true) ?? [];
-				}
-				else
-				{
-				    throw new \RuntimeException(sprintf('Manifest file `%s` not found', $manifestFile));
-				}
+				$manifest = $this->loadManifestAssets($typeConfig['manifest_file']);
 			}
 
 			foreach($typeConfig['manifest_assets'] ?? [] as $manifestKey)
@@ -89,4 +81,29 @@ class DocplannerAssetsExtension extends Extension
 		$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
+
+    protected function loadManifestAssets($manifestFile)
+	{
+		if(!array_key_exists($manifestFile, self::$parsedManifests))
+		{
+			if(is_file($manifestFile) && is_readable($manifestFile))
+			{
+				$manifest = file_get_contents($manifestFile);
+				$manifest = @json_decode($manifest, true);
+
+				if(!is_array($manifest))
+				{
+					throw new \RuntimeException(sprintf('Cannot parse manifest file `%s`', $manifestFile));
+				}
+
+				self::$parsedManifests[$manifestFile] = $manifest;
+			}
+			else
+			{
+				throw new \RuntimeException(sprintf('Manifest file `%s` not found', $manifestFile));
+			}
+		}
+
+		return self::$parsedManifests[$manifestFile];
+	}
 }
