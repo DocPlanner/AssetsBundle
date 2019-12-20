@@ -6,6 +6,7 @@
 
 namespace Docplanner\AssetsBundle\Service;
 
+use LogicException;
 use Docplanner\AssetsBundle\IO\Asset;
 
 class AssetsRepository
@@ -38,7 +39,7 @@ class AssetsRepository
 
 		if (false === array_key_exists($type, $this->config['types']))
 		{
-			throw new \LogicException(sprintf('Type "%s" is not defined!', $type));
+			throw new LogicException(sprintf('Type "%s" is not defined!', $type));
 		}
 
 		$this->data[$type] = [];
@@ -62,7 +63,7 @@ class AssetsRepository
 
 		if (false === array_key_exists($assetName, $assets))
 		{
-			throw new \LogicException(sprintf('Asset "%s" not defined in type "%s"!', $assetName, $type));
+			throw new LogicException(sprintf('Asset "%s" not defined in type "%s"!', $assetName, $type));
 		}
 
 		return $assets[$assetName];
