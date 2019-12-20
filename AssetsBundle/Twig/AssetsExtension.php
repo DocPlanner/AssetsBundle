@@ -2,9 +2,11 @@
 
 namespace Docplanner\AssetsBundle\Twig;
 
+use Twig_Extension;
+use Twig_SimpleFunction;
 use Docplanner\AssetsBundle\Service\AssetsLoader;
 
-class AssetsExtension extends \Twig_Extension
+class AssetsExtension extends Twig_Extension
 {
 	/** @var AssetsLoader $assetsLoader */
 	private $assetsLoader;
@@ -23,7 +25,7 @@ class AssetsExtension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return [
-			new \Twig_SimpleFunction('assets_*', [$this->assetsLoader, 'assets'], ['is_safe' => ['html']]),
+			new Twig_SimpleFunction('assets_*', [$this->assetsLoader, 'assets'], ['is_safe' => ['html']]),
 		];
 	}
 

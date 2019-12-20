@@ -2,6 +2,8 @@
 
 namespace Docplanner\AssetsBundle\DependencyInjection;
 
+use RuntimeException;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -40,7 +42,7 @@ class DocplannerAssetsExtension extends Extension
 
 					if (false === file_exists($path))
 					{
-						throw new \RuntimeException(sprintf('File "%s" not found(asset "%s")!', $path, $assetName));
+						throw new RuntimeException(sprintf('File "%s" not found(asset "%s")!', $path, $assetName));
 					}
 
 					if ($config['use_revisions'])
@@ -78,7 +80,7 @@ class DocplannerAssetsExtension extends Extension
 
 		$container->setParameter('docplanner_assets.config', $config);
 
-		$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+		$loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
 
@@ -93,14 +95,14 @@ class DocplannerAssetsExtension extends Extension
 
 				if(!is_array($manifest))
 				{
-					throw new \RuntimeException(sprintf('Cannot parse manifest file `%s`', $manifestFile));
+					throw new RuntimeException(sprintf('Cannot parse manifest file `%s`', $manifestFile));
 				}
 
 				self::$parsedManifests[$manifestFile] = $manifest;
 			}
 			else
 			{
-				throw new \RuntimeException(sprintf('Manifest file `%s` not found', $manifestFile));
+				throw new RuntimeException(sprintf('Manifest file `%s` not found', $manifestFile));
 			}
 		}
 

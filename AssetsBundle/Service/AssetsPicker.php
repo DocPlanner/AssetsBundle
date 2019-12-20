@@ -6,6 +6,7 @@
 
 namespace Docplanner\AssetsBundle\Service;
 
+use LogicException;
 use Docplanner\AssetsBundle\IO\Asset;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -40,7 +41,7 @@ class AssetsPicker
 	public function pickAssets($type, $forceRoute = null)
 	{
 		if (false === array_key_exists($type, $this->config['types'])) {
-			throw new \LogicException(sprintf('Type "%s" is not defined!', $type));
+			throw new LogicException(sprintf('Type "%s" is not defined!', $type));
 		}
 
 		$route = $forceRoute ? $forceRoute : ($this->requestStack->getMasterRequest() ? $this->requestStack->getMasterRequest()->get('_route') : null);
