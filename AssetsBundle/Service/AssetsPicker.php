@@ -44,7 +44,7 @@ class AssetsPicker
 			throw new LogicException(sprintf('Type "%s" is not defined!', $type));
 		}
 
-		$route = $forceRoute ? $forceRoute : ($this->requestStack->getMasterRequest() ? $this->requestStack->getMasterRequest()->get('_route') : null);
+		$route = $forceRoute ?: ($this->requestStack->getMasterRequest() ? $this->requestStack->getMasterRequest()->get('_route') : null);
 
 		$defaults = [];
 		$picked = [];

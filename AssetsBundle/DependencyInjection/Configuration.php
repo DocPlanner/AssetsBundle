@@ -16,8 +16,10 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder;
-        $nodeBuilder = $treeBuilder->root('docplanner_assets')->children();
+        $treeBuilder = new TreeBuilder('docplanner_assets');
+        $rootNode = !method_exists($treeBuilder, 'getRootNode') ? $treeBuilder->root('docplanner_assets') : $treeBuilder->getRootNode();
+
+        $nodeBuilder = $rootNode->children();
 
         $this->addOptions($nodeBuilder)
               ->addTypes($nodeBuilder);
