@@ -17,6 +17,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('docplanner_assets');
+        /** @noinspection PhpUndefinedMethodInspection */
         $rootNode = !method_exists($treeBuilder, 'getRootNode') ? $treeBuilder->root('docplanner_assets') : $treeBuilder->getRootNode();
 
         $nodeBuilder = $rootNode->children();
@@ -35,7 +36,6 @@ class Configuration implements ConfigurationInterface
     public function addTypes(NodeBuilder $node)
     {
         // @formatter:off
-        /** @noinspection PhpUndefinedMethodInspection */
         $node->arrayNode('types')
                 ->useAttributeAsKey('type')
                 ->prototype('array')
