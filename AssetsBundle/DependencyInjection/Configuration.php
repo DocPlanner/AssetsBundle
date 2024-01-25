@@ -93,18 +93,9 @@ class Configuration implements ConfigurationInterface
      */
     private function addOptions(NodeBuilder $nodeBuilder)
     {
-        // @formatter:off
-        /** @noinspection PhpUndefinedMethodInspection */
-        $nodeBuilder->scalarNode('use_revisions')
-                        ->defaultTrue()
-                    ->end()
-                    ->scalarNode('base_host')
-                        ->isRequired()
-                    ->end()
-                    ->scalarNode('base_path')
-                        ->isRequired()
-                    ->end();
-        // @formatter:on
+        $nodeBuilder->scalarNode('use_revisions')->defaultTrue()->end();
+        $nodeBuilder->scalarNode('base_host')->isRequired()->end();
+        $nodeBuilder->scalarNode('base_path')->isRequired()->end();
 
         return $this;
     }
