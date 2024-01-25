@@ -50,11 +50,11 @@ class AssetsPicker
 		$picked = [];
 		foreach ($this->config['types'][$type]['groups'] as $groupName => $group) {
 			if (is_array($group['routes']) && in_array($route, $group['routes'])) {
-				$picked[] = $group['assets'];
+				$picked = array_merge($picked, $group['assets']);
 			}
 
 			if ($group['default']) {
-				$defaults[] = $group['assets'];
+				$defaults = array_merge($defaults, $group['assets']);
 			}
 		}
 
