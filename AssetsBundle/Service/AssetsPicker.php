@@ -59,13 +59,9 @@ class AssetsPicker
 		}
 
 		if (0 === count($picked)) {
-			array_unique($defaults);
-
-			return $defaults;
+			return array_unique($defaults);
 		}
 
-		array_unique($picked);
-
-		return $picked;
+		return array_unique($picked);
 	}
 }
