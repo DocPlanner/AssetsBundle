@@ -44,7 +44,7 @@ class AssetsPicker
 			throw new LogicException(sprintf('Type "%s" is not defined!', $type));
 		}
 
-		$route = $forceRoute ?? ($this->requestStack->getMasterRequest() ? $this->requestStack->getMasterRequest()->get('_route') : null);
+		$route = $forceRoute ?? $this->mainRequestRoute();
 
 		$defaults = [];
 		$picked = [];
@@ -63,5 +63,13 @@ class AssetsPicker
 		}
 
 		return array_unique($picked);
+	}
+
+	private function mainRequestRoute()
+	{
+		// getMainRequest() exists since Symfony 5.3; getMasterRequest() is removed in 6.0
+		$request = method_exists($this->requestStack, 'getMainRequest') ? $this->requestStack->getMainRequest() : $this->requestStack->getMasterRequest();
+
+		return $request ? $request->get('_route') : null;
 	}
 }
