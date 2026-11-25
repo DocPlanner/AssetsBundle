@@ -20,7 +20,7 @@ jobs:
         symfony: [ '^5.4', '^6.4' ]
         deps: [ highest, lowest ]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -40,7 +40,7 @@ jobs:
         composer update --prefer-dist --no-progress --no-security-blocking ${{ matrix.deps == 'lowest' && '--prefer-lowest --prefer-stable' || '' }}
 
     - name: Installed versions
-      run: composer show 'symfony/framework-bundle' 'symfony/http-kernel' 'twig/twig' | grep -E '^(name|versions)'
+      run: composer show | grep -E '^(symfony/(framework-bundle|http-kernel|twig-bundle)|twig/twig|phpunit/phpunit) '
 
     - name: PHPUnit
       run: composer test
